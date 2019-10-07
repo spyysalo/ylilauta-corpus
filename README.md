@@ -69,21 +69,65 @@ for t in train dev test; do
 done
 ```
 
+# Create 10% and 1% subsets of training data
+
+for s in 1000 100; do
+    mkdir sampled-${s}
+    head -n 10 label_stats.txt | awk '{ print $2 }' | while read l; do
+        shuf split/${l}-train.txt | head -n $s > sampled-${s}/${l}-train.txt
+    done
+    cat sampled-${s}/*-train.txt | shuf > data/ylilauta-train-${s}.txt
+done
+
 # Experiments w/fastText
+
+Setup
+
+```
+export FASTTEXT=PATH_TO_FASTTEXT
+```
 
 Defaults (expect ~66%)
 
 ```
-export FASTTEXT=PATH_TO_FASTTEXT
 $FASTTEXT supervised -input data/ylilauta-train.txt -output ylilauta.model
 $FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
 ```
 
-With more epochs and subwords (expect ~76%)
+With more epochs and subwords (~76%)
 
 ```
-export FASTTEXT=PATH_TO_FASTTEXT
 $FASTTEXT supervised -input data/ylilauta-train.txt -output ylilauta.model \
+    -minn 3 -maxn 5 -epoch 25
+$FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
+```
+
+Defaults with 10% of training data (~15%)
+
+```
+$FASTTEXT supervised -input data/ylilauta-train-1000.txt -output ylilauta.model
+$FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
+```
+
+More epochs and subwords, 10% of training data (~32%)
+
+```
+$FASTTEXT supervised -input data/ylilauta-train-1000.txt -output ylilauta.model\
+    -minn 3 -maxn 5 -epoch 25
+$FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
+```
+
+Defaults, 1% of training data (~14%)
+
+```
+$FASTTEXT supervised -input data/ylilauta-train-100.txt -output ylilauta.model
+$FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
+```
+
+More epochs and subwords, 1% of training data (~20%)
+
+```
+$FASTTEXT supervised -input data/ylilauta-train-100.txt -output ylilauta.model\
     -minn 3 -maxn 5 -epoch 25
 $FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
 ```
