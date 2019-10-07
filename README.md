@@ -4,7 +4,7 @@ Tools and data related to the Ylilauta corpus
 
 Data source: http://urn.fi/urn:nbn:fi:lb-2016101210
 
-Licence: [CC-BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) (See data/README.txt)
+Data licence: [CC-BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) (See data/README.txt)
 
 # Processing
 
@@ -69,7 +69,7 @@ for t in train dev test; do
 done
 ```
 
-# Create 10% and 1% subsets of training data
+## Create 10% and 1% subsets of training data
 
 for s in 1000 100; do
     mkdir sampled-${s}
@@ -79,7 +79,7 @@ for s in 1000 100; do
     cat sampled-${s}/*-train.txt | shuf > data/ylilauta-train-${s}.txt
 done
 
-# Experiments w/fastText
+## Experiments w/fastText
 
 Setup
 
