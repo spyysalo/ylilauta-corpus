@@ -71,6 +71,7 @@ done
 
 ## Create 10% and 1% subsets of training data
 
+```
 for s in 1000 100; do
     mkdir sampled-${s}
     head -n 10 label_stats.txt | awk '{ print $2 }' | while read l; do
@@ -78,6 +79,7 @@ for s in 1000 100; do
     done
     cat sampled-${s}/*-train.txt | shuf > data/ylilauta-train-${s}.txt
 done
+```
 
 ## Experiments w/fastText
 
