@@ -133,3 +133,109 @@ $FASTTEXT supervised -input data/ylilauta-train-100.txt -output ylilauta.model\
     -minn 3 -maxn 5 -epoch 25
 $FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
 ```
+
+## Experiments with pretrained word embeddings
+
+### polyglot embeddings
+
+Download polyglot Finnish embeddings
+
+```
+wget http://bit.ly/19bSmJo -O polyglot-fi.pkl
+```
+
+Convert to word2vec format
+
+```
+python3 polyglot2text.py polyglot-fi.pkl > polyglot-fi.txt
+```
+
+fastText with polyglot embeddings, defaults otherwise (~69%)
+
+```
+$FASTTEXT supervised -input data/ylilauta-train.txt -output ylilauta.model \
+     -pretrainedVectors polyglot-fi.txt -dim 64
+$FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
+```
+
+More epochs and subwords (~76%)
+
+```
+$FASTTEXT supervised -input data/ylilauta-train.txt -output ylilauta.model \
+     -pretrainedVectors polyglot-fi.txt -dim 64 -minn 3 -maxn 5 -epoch 25
+$FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
+```
+
+### fastText embeddings
+
+Download Wiki embeddings
+
+```
+wget https://dl.fbaipublicfiles.com/fasttext/vectors-wiki/wiki.fi.vec
+```
+
+Use fastText Wiki embeddings, defaults otherwise (~70)
+
+```
+$FASTTEXT supervised -input data/ylilauta-train.txt -output ylilauta.model \
+     -pretrainedVectors wiki.fi.vec -dim 300
+$FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
+```
+
+More epochs and subwords (~76)
+
+```
+$FASTTEXT supervised -input data/ylilauta-train.txt -output ylilauta.model \
+     -pretrainedVectors wiki.fi.vec -dim 300 \
+     -minn 3 -maxn 5 -epoch 25
+$FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
+```
+
+Download and unpack Wiki + CommonCrawl embeddings
+
+```
+wget https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.fi.300.vec.gz
+gunzip cc.fi.300.vec.gz
+```
+
+Use fastText embeddings, defaults otherwise (~69)
+
+```
+$FASTTEXT supervised -input data/ylilauta-train.txt -output ylilauta.model \
+     -pretrainedVectors cc.fi.300.vec -dim 300
+$FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
+```
+
+More epochs and subwords (~75)
+
+```
+$FASTTEXT supervised -input data/ylilauta-train.txt -output ylilauta.model \
+     -pretrainedVectors cc.fi.300.vec -dim 300 \
+     -minn 3 -maxn 5 -epoch 25
+$FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
+```
+
+### TurkuNLP embeddings
+
+Download
+
+```
+wget http://dl.turkunlp.org/finnish-embeddings/finnish_4B_parsebank_skgram.bin
+```
+
+Use embeddings, defaults otherwise (~67%)
+
+```
+$FASTTEXT supervised -input data/ylilauta-train.txt -output ylilauta.model \
+     -pretrainedVectors finnish_4B_parsebank_skgram.bin -dim 200
+$FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
+```
+
+More epochs and subwords (~75%)
+
+```
+$FASTTEXT supervised -input data/ylilauta-train.txt -output ylilauta.model \
+     -pretrainedVectors finnish_4B_parsebank_skgram.bin -dim 200 \
+     -minn 3 -maxn 5 -epoch 25
+$FASTTEXT test ylilauta.model.bin data/ylilauta-dev.txt
+```
