@@ -81,6 +81,22 @@ for s in 1000 100; do
 done
 ```
 
+## Create symlinks with consistent naming (for convenience)
+
+```
+mkdir data/{100,10,1}-percent
+for d in data/{100,10,1}-percent; do
+    ( 
+        cd $d;
+        ln -s ../ylilauta-dev.txt dev.txt;
+        ln -s ../ylilauta-test.txt test.txt
+    )
+done
+(cd data/1-percent; ln -s ../ylilauta-train-100.txt train.txt)
+(cd data/10-percent; ln -s ../ylilauta-train-1000.txt train.txt)
+(cd data/100-percent; ln -s ../ylilauta-train.txt train.txt)
+```
+
 ## Experiments w/fastText
 
 Setup
