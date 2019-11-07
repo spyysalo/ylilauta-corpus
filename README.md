@@ -72,7 +72,7 @@ done
 ## Create 10% and 1% subsets of training data
 
 ```
-for s in 1000 100; do
+for s in 3162 1000 316 100; do
     mkdir sampled-${s}
     head -n 10 label_stats.txt | awk '{ print $2 }' | while read l; do
         shuf split/${l}-train.txt | head -n $s > sampled-${s}/${l}-train.txt
@@ -84,8 +84,8 @@ done
 ## Create symlinks with consistent naming (for convenience)
 
 ```
-mkdir data/{100,10,1}-percent
-for d in data/{100,10,1}-percent; do
+mkdir data/{100,32,10,3,1}-percent
+for d in data/{100,32,10,3,1}-percent; do
     ( 
         cd $d;
         ln -s ../ylilauta-dev.txt dev.txt;
@@ -93,7 +93,9 @@ for d in data/{100,10,1}-percent; do
     )
 done
 (cd data/1-percent; ln -s ../ylilauta-train-100.txt train.txt)
+(cd data/3-percent; ln -s ../ylilauta-train-316.txt train.txt)
 (cd data/10-percent; ln -s ../ylilauta-train-1000.txt train.txt)
+(cd data/32-percent; ln -s ../ylilauta-train-3162.txt train.txt)
 (cd data/100-percent; ln -s ../ylilauta-train.txt train.txt)
 ```
 
