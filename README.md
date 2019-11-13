@@ -69,15 +69,44 @@ for t in train dev test; do
 done
 ```
 
-## Create 10% and 1% subsets of training data
+## Create subsets of training data
 
 ```
-for s in 1000 100; do
+for s in 3162 1000 316 100; do
     mkdir sampled-${s}
     head -n 10 label_stats.txt | awk '{ print $2 }' | while read l; do
         shuf split/${l}-train.txt | head -n $s > sampled-${s}/${l}-train.txt
     done
     cat sampled-${s}/*-train.txt | shuf > data/ylilauta-train-${s}.txt
+done
+```
+
+## Create truncated versions of data
+
+(Truncates lines to max 256 basic tokens, affects under 2% of examples)
+
+mkdir trunc-data
+for f in data/*.txt; do
+    python3 scripts/truncate.py 256 "$f" > trunc-data/$(basename "$f")
+done
+
+## Create symlinks with consistent naming (for convenience)
+
+```
+for s in data trunc-data; do
+    mkdir $s/{100,32,10,3,1}-percent
+    for d in $s/{100,32,10,3,1}-percent; do
+        (
+            cd $d;
+            ln -s ../ylilauta-dev.txt dev.txt;
+            ln -s ../ylilauta-test.txt test.txt
+        )
+    done
+    (cd $s/1-percent; ln -s ../ylilauta-train-100.txt train.txt)
+    (cd $s/3-percent; ln -s ../ylilauta-train-316.txt train.txt)
+    (cd $s/10-percent; ln -s ../ylilauta-train-1000.txt train.txt)
+    (cd $s/32-percent; ln -s ../ylilauta-train-3162.txt train.txt)
+    (cd $s/100-percent; ln -s ../ylilauta-train.txt train.txt)
 done
 ```
 
