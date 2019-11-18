@@ -11,7 +11,7 @@ REPETITIONS=10
 
 FASTTEXT="$HOME/git_checkout/fastText/fasttext"
 
-DATADIR="$SCRIPTDIR/../data"
+DATADIR="$SCRIPTDIR/../trunc-data"
 
 WORDVECDIR="$SCRIPTDIR/../wordvecs"
 
